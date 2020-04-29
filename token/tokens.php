@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$configfile= __DIR__ . '/token-config.php';
+$configfile= __DIR__ . '/config.php';
 if (file_exists($configfile)) {
     include_once $configfile;
 } else {
