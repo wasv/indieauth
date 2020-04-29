@@ -1,6 +1,6 @@
 # IndieAuth Web sign-in Endpoints
 
-An IndieAuth implemtnation formed from a combination of:
+An [IndieAuth](https://indieweb.org/IndieAuth) implementation formed from a combination of:
 
 * auth - [selfauth](https://github.com/Inklings-io/selfauth) authorization-endpoint
 * token - [mintoken](https://github.com/Zegnat/php-mintoken) token-endpoint
