@@ -20,5 +20,5 @@ if (!isset($_SESSION['CREATED']) || (time() - $_SESSION['CREATED'] > 7 * 24 * 36
 if( isset($_SESSION['me']) && $_SESSION['me'] == $ME ) {
         ; // authorized! just return 200 aka do nothing
 } else {
-        header("HTTP/1.1 401 Unauthorized");
+        http_response_code(401);
 }

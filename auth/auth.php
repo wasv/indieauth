@@ -1,8 +1,7 @@
 <?php
-function error_page($header, $body, $http = '400 Bad Request')
+function error_page($header, $body, $resp_code=400)
 {
-    $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-    header($protocol . ' ' . $http);
+    http_response_code($resp_code)
     $html = <<<HTML
 <!doctype html>
 <html>
@@ -195,7 +194,7 @@ if ($code !== null) {
         error_page(
             'No Accepted Response Types',
             'The client accepts neither JSON nor Form encoded responses.',
-            '406 Not Acceptable'
+            406
         );
     } elseif ($json >= $form) {
         header('Content-Type: application/json');

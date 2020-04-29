@@ -6,7 +6,7 @@ $configfile= __DIR__ . '/token-config.php';
 if (file_exists($configfile)) {
     include_once $configfile;
 } else {
-    header('HTTP/1.1 500 Internal Server Error');
+    http_response_code(500);
     header('Content-Type: text/plain;charset=UTF-8');
     exit('server_error');
 }
@@ -204,7 +204,7 @@ function invalidRequest(): void
 {
     // This is probably wrong, but RFC 6750 is a little unclear.
     // Maybe this should be handled per RFC 6749, putting the error code in the redirect?
-    header('HTTP/1.1 400 Bad Request');
+    http_response_code(400);
     header('Content-Type: text/plain;charset=UTF-8');
     exit('invalid_request');
 }
@@ -221,25 +221,25 @@ if ($method === 'GET') {
         }
     }
     if ($authorization === null) {
-        header('HTTP/1.1 401 Unauthorized');
+        http_response_code(401);
         header('WWW-Authenticate: Bearer');
         exit();
     } elseif ($authorization === false) {
-        header('HTTP/1.1 401 Unauthorized');
+        http_response_code(401);
         header('WWW-Authenticate: Bearer, error="invalid_token", error_description="The access token is malformed"');
         exit();
     } else {
         $token = retrieveToken(substr($authorization, 7));
         if ($token === null) {
-            header('HTTP/1.1 401 Unauthorized');
+            http_response_code(401);
             header('WWW-Authenticate: Bearer, error="invalid_token", error_description="The access token is unknown"');
             exit();
         } elseif ($token['active'] === '0') {
-            header('HTTP/1.1 401 Unauthorized');
+            http_response_code(401);
             header('WWW-Authenticate: Bearer, error="invalid_token", error_description="The access token is revoked"');
             exit();
         } else {
-            header('HTTP/1.1 200 OK');
+            http_response_code(200);
             header('Content-Type: application/json;charset=UTF-8');
             markTokenUsed($token['token_id']);
             exit(json_encode([
@@ -252,7 +252,7 @@ if ($method === 'GET') {
 } elseif ($method === 'POST') {
     $type = filter_input(INPUT_SERVER, 'CONTENT_TYPE', FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => '@^application/x-www-form-urlencoded(;.*)?$@']]);
     if (!is_string($type)) {
-        header('HTTP/1.1 415 Unsupported Media Type');
+        http_response_code(415);
         exit();
     }
     $revoke = filter_input(INPUT_POST, 'action', FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => '@^revoke$@']]);
@@ -261,7 +261,7 @@ if ($method === 'GET') {
         if (is_string($token)) {
             revokeToken($token);
         }
-        header('HTTP/1.1 200 OK');
+        http_response_code(200);
         exit();
     }
     $request =
@@ -290,7 +290,7 @@ if ($method === 'GET') {
         invalidRequest();
     }
     $token = storeToken($info['me'], $request['client_id'], $info['scope']);
-    header('HTTP/1.1 200 OK');
+    http_response_code(200);
     header('Content-Type: application/json;charset=UTF-8');
     exit(json_encode([
         'access_token' => $token,
@@ -299,7 +299,7 @@ if ($method === 'GET') {
         'me' => $info['me'],
     ]));
 } else {
-    header('HTTP/1.1 405 Method Not Allowed');
+    http_response_code(405);
     header('Allow: GET, POST');
     exit();
 }
