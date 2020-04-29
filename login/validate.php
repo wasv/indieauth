@@ -1,7 +1,11 @@
 <?php
 
-// Change this to match your IndieAuth url.
-static $ME = 'https://example.org/';
+$configfile= __DIR__ . '/config.php';
+if (file_exists($configfile)) {
+    include_once $configfile;
+} else {
+    http_response_code(500);
+}
 
 session_start([
         'use_only_cookies' => true,
@@ -18,7 +22,7 @@ if (!isset($_SESSION['CREATED']) || (time() - $_SESSION['CREATED'] > 7 * 24 * 36
 // session start and check session for a 'me' url and whether
 // that 'me' is good according to the auth request
 if( isset($_SESSION['me']) ) {
-    if( $_SESSION['me'] == $ME ) {
+    if( $_SESSION['me'] == MYSELF ) {
         ; // authorized! just return 200 aka do nothing
     } else {
         http_response_code(403);

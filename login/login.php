@@ -2,6 +2,13 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+$configfile= __DIR__ . '/config.php';
+if (file_exists($configfile)) {
+    include_once $configfile;
+} else {
+    http_response_code(500);
+}
+
 session_start([
         'use_only_cookies' => true,
         'cookie_secure' => true,
@@ -10,8 +17,8 @@ session_start([
 ]);
 
 // Change to fit webserver configuration.
-IndieAuth\Client::$clientID = 'https://example.org/login/';
-IndieAuth\Client::$redirectURL = 'https://example.org/login/';
+IndieAuth\Client::$clientID = CLIENT_ID;
+IndieAuth\Client::$redirectURL = CALLBACK_URL;
 
 if(!isset($_SESSION['indieauth_state'])) {
     if( isset($_POST['me'])):
