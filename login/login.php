@@ -10,6 +10,7 @@ if (file_exists($configfile)) {
 }
 
 session_start([
+        'name' => 'iauth',
         'use_only_cookies' => true,
         'cookie_secure' => true,
         'cookie_lifetime' => 14 * 24  *3600,
