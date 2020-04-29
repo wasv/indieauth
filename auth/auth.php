@@ -1,7 +1,7 @@
 <?php
 function error_page($header, $body, $resp_code=400)
 {
-    http_response_code($resp_code)
+    http_response_code($resp_code);
     $html = <<<HTML
 <!doctype html>
 <html>
